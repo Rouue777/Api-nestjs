@@ -23,10 +23,19 @@ export class UserService {
 
     //function para pegar usuario
     async user(
-        userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-      ): Promise<User | null> {
+        UserWhereUniqueInput:  Prisma.UserWhereUniqueInput,
+      ): Promise<Omit <User, 'password'> | null> {
         return this.prisma.user.findUnique({
-          where: userWhereUniqueInput,
+          where: UserWhereUniqueInput,
+          select:{
+            id: true,
+            name: true,
+            email: true,
+            password: false,
+            createdAt: true,
+            updatedAt: true,
+
+          }
         });
       }
 
