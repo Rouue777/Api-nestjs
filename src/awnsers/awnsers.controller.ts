@@ -3,6 +3,7 @@ import { AwnsersService } from './awnsers.service';
 import { CreateAnswerDto } from './dto/create-awnser.dto';
 import { UpdateAwnserDto } from './dto/update-awnser.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ValidationPipe } from 'src/validationSchema/validation.pipe';
 
 @Controller('answers')
 export class AwnsersController {
@@ -11,7 +12,7 @@ export class AwnsersController {
   //criar uma nova awnser
   @Post(':questionId')
   @UseGuards(AuthGuard)
-  create(@Body() createAnswerDto: CreateAnswerDto, @Param('questionId') questionId: string, @Request() req: any) {
+  create(@Body(new ValidationPipe) createAnswerDto: CreateAnswerDto, @Param('questionId') questionId: string, @Request() req: any) {
     console.log(req.sub.sub.id);
     const userId = req.sub.sub.id;
     return this.answersService.create(createAnswerDto, userId, Number(questionId));
@@ -30,7 +31,7 @@ export class AwnsersController {
 
   //update awnser
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAwnserDto: UpdateAwnserDto) {
+  update(@Param('id') id: string, @Body( new ValidationPipe) updateAwnserDto: UpdateAwnserDto) {
     return this.answersService.update(+id, updateAwnserDto);
   }
 

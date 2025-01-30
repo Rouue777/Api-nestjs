@@ -3,6 +3,7 @@ import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ValidationPipe } from 'src/validationSchema/validation.pipe';
 
 @Controller('questions')
 export class QuestionsController {
@@ -11,7 +12,7 @@ export class QuestionsController {
   //rota para criar uma question
   @Post('create')
   @UseGuards(AuthGuard)
-  create(@Body() createQuestionDto: CreateQuestionDto, @Request() req: any) {
+  create(@Body(new ValidationPipe) createQuestionDto: CreateQuestionDto, @Request() req: any) {
     return this.questionsService.create(createQuestionDto, req);
   }
 
@@ -32,7 +33,7 @@ export class QuestionsController {
   //rota para atualizar uma question  
   @Patch(':id')
   @UseGuards(AuthGuard)
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateQuestionDto: UpdateQuestionDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe) updateQuestionDto: UpdateQuestionDto) {
     return this.questionsService.update(id, updateQuestionDto);
   }
 

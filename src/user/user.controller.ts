@@ -2,6 +2,9 @@ import { Body, Controller, Post, Get, Param, Patch, Put, Delete, UseGuards, Pars
 import { Prisma, User, User as UserModel } from '@prisma/client';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ValidationPipe } from 'src/validationSchema/validation.pipe';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Controller('user')
 export class UserController {
@@ -11,7 +14,7 @@ export class UserController {
   //metodo post para criar user
   @Post('signup')
   async signupUser(
-    @Body() userData: Prisma.UserCreateInput,
+    @Body( new ValidationPipe) userData: CreateUserDto,
   ): Promise<UserModel> {
     return this.userservice.createUser(
       userData
@@ -31,7 +34,7 @@ export class UserController {
   //metodo para update user
   @UseGuards(AuthGuard)
   @Put(':id')
-  async updateUser(@Body() userData: Prisma.UserUpdateInput,
+  async updateUser(@Body( new ValidationPipe) userData: UpdateUserDto,
     @Param('id', ParseIntPipe) id: number): Promise<UserModel> {
     return this.userservice.updateUser({ where: { id }, data: userData })
   }
